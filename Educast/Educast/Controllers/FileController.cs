@@ -1,5 +1,4 @@
 ﻿using Educast.Models;
-using Educast.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
@@ -35,35 +34,57 @@ namespace Educast.Controllers
         }
 
         [Microsoft.AspNetCore.Mvc.HttpPost]
-        public async Task<IHttpActionResult> Upload()
-        {
-            if (!Request.Content.IsMimeMultipartContent())
-                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
-
-            var provider = new MultipartMemoryStreamProvider();
-            await Request.Content.ReadAsMultipartAsync(provider);
-            foreach (var file in provider.Contents)
-            {
-                var filename = file.Headers.ContentDisposition.FileName.Trim('\"');
-                var buffer = await file.ReadAsByteArrayAsync();
-
-
-            }
-
-            return Ok();
-        }
-
-        [Microsoft.AspNetCore.Mvc.HttpPut("{id}")]
-        public async Task<HttpResponseMessage> Update(ObjectId id)
+        public async Task<IHttpActionResult> Upload(Files fileIn)
         {
             try
             {
-                
-                return null;
+                if (!Request.Content.IsMimeMultipartContent())
+                    throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+
+                var provider = new MultipartMemoryStreamProvider();
+                await Request.Content.ReadAsMultipartAsync(provider);
+                foreach (var file in provider.Contents)
+                {
+                    var filename = file.Headers.ContentDisposition.FileName.Trim('\"');
+                    var buffer = await file.ReadAsByteArrayAsync();
+                    fileIn.fileName = filename;
+                    fileIn.Bytes = buffer;
+                    await _files.InsertOneAsync(fileIn);
+                }
+
+                return Ok();
             }
             catch (Exception e)
             {
-                return null;
+                return BadRequest(e.Message);
+            }
+            
+        }
+
+        [Microsoft.AspNetCore.Mvc.HttpPut("{id}")]
+        public async Task<IHttpActionResult> Update([FromRouteAttribute]ObjectId id, Files fileIn)
+        {
+            try
+            {
+                if (!Request.Content.IsMimeMultipartContent())
+                    throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+
+                var provider = new MultipartMemoryStreamProvider();
+                await Request.Content.ReadAsMultipartAsync(provider);
+                foreach (var file in provider.Contents)
+                {
+                    var filename = file.Headers.ContentDisposition.FileName.Trim('\"');
+                    var buffer = await file.ReadAsByteArrayAsync();
+                    fileIn.fileName = filename;
+                    fileIn.Bytes = buffer;
+                    await _files.ReplaceOneAsync(fil => fil.Id == id, fileIn);
+                }
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
             }
         }
     }

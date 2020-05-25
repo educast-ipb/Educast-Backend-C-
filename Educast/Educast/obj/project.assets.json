@@ -6352,7 +6352,6 @@
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v3.1": [
-      "Microsoft.AspNet.WebApi.Client >= 5.2.7",
       "Microsoft.AspNet.WebApi.Core >= 5.2.7",
       "MongoDB.Driver >= 2.10.4",
       "MongoDB.Driver.GridFS >= 2.10.4",
@@ -6366,11 +6365,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\tarlo\\Documents\\Educast\\Educast\\Educast.csproj",
+      "projectUniqueName": "D:\\TESE\\ASI\\Educast-Backend-C-\\Educast\\Educast\\Educast.csproj",
       "projectName": "Educast",
-      "projectPath": "C:\\Users\\tarlo\\Documents\\Educast\\Educast\\Educast.csproj",
+      "projectPath": "D:\\TESE\\ASI\\Educast-Backend-C-\\Educast\\Educast\\Educast.csproj",
       "packagesPath": "C:\\Users\\tarlo\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\tarlo\\Documents\\Educast\\Educast\\obj\\",
+      "outputPath": "D:\\TESE\\ASI\\Educast-Backend-C-\\Educast\\Educast\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\tarlo\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -6397,10 +6396,6 @@
     "frameworks": {
       "netcoreapp3.1": {
         "dependencies": {
-          "Microsoft.AspNet.WebApi.Client": {
-            "target": "Package",
-            "version": "[5.2.7, )"
-          },
           "Microsoft.AspNet.WebApi.Core": {
             "target": "Package",
             "version": "[5.2.7, )"

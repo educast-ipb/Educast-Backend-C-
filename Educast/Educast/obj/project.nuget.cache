@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "JBZpFzeC8QMkui7cCQqcjrTqHPoN5pLwNNUsrejimQFJJb9i/pmRk2TTARUgRToeKEhRX52IWPxuBDOfFeDttQ==",
+  "dgSpecHash": "OqZ7pXNOogOgX6gnX37pptjSmra6fLWdTxP5xP1UY8+pFx204MBH+Pizx1ij52Mla6r279KZkj+igi2Q6y9z9g==",
   "success": true,
-  "projectFilePath": "C:\\Users\\tarlo\\Documents\\Educast\\Educast\\Educast.csproj",
+  "projectFilePath": "D:\\TESE\\ASI\\Educast-Backend-C-\\Educast\\Educast\\Educast.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\tarlo\\.nuget\\packages\\dnsclient\\1.3.1\\dnsclient.1.3.1.nupkg.sha512",
     "C:\\Users\\tarlo\\.nuget\\packages\\microsoft.aspnet.webapi.client\\5.2.7\\microsoft.aspnet.webapi.client.5.2.7.nupkg.sha512",

@@ -10,7 +10,7 @@ namespace Educast.Models
     {
         public ObjectId Id { get; set; }
         public string fileName { get; set; }
-        public byte[] file { get; set; }
+        public byte[] Bytes { get; set; }
         public int idXML { get; set; }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Educast.Models;
-using Educast.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
@@ -21,16 +20,14 @@ namespace Educast.Controllers
     [ApiController]
     public class XMLController: ControllerBase
     {
-        private readonly XMLDocsService _xmldocsService;
         private readonly IMongoCollection<XMLDoc> _xml;
 
-        public XMLController(XMLDocsService xmldocsService)
+        public XMLController()
         {
             var client = new MongoClient();
             var database = client.GetDatabase("Educast");
 
             _xml = database.GetCollection<XMLDoc>("xmlFiles");
-            _xmldocsService = xmldocsService;
         }
 
 
@@ -75,7 +72,7 @@ namespace Educast.Controllers
                     string jsonText = JsonConvert.SerializeXmlNode(doc); //XML to Json
                     var bsdocument = BsonSerializer.Deserialize<BsonDocument>(jsonText); //Deserialize JSON String to BSon Document
                     xmlIn.XML = bsdocument;
-                    _xml.ReplaceOne(xml => xml.Id == id, xmlIn); 
+                    await _xml.ReplaceOneAsync(xml => xml.Id == id, xmlIn); 
                 }
                 return Ok();
             }
