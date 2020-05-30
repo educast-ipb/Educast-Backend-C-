@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
-VisualStudioVersion = 16.0.29806.167
+VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Educast", "Educast\Educast.csproj", "{24624A5F-F1C7-4B96-9FDD-C19FD5419CED}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Educast", "WebApplication2\Educast.csproj", "{C027452D-1A8B-4FA4-97A5-D00FED5078B9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{24624A5F-F1C7-4B96-9FDD-C19FD5419CED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{24624A5F-F1C7-4B96-9FDD-C19FD5419CED}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{24624A5F-F1C7-4B96-9FDD-C19FD5419CED}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{24624A5F-F1C7-4B96-9FDD-C19FD5419CED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C027452D-1A8B-4FA4-97A5-D00FED5078B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C027452D-1A8B-4FA4-97A5-D00FED5078B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C027452D-1A8B-4FA4-97A5-D00FED5078B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C027452D-1A8B-4FA4-97A5-D00FED5078B9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {033E98A4-AE05-4ACC-82A2-65B46548E918}
+		SolutionGuid = {1FB602A0-1F32-4DEC-BC27-139E8879EE53}
 	EndGlobalSection
 EndGlobal

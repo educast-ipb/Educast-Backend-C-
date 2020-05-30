@@ -1,24 +1,22 @@
-﻿using Educast.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
-using MongoDB.Driver;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System;
 using System.Linq;
-using System.Net.Http;
+using System.IO;
 using System.Threading.Tasks;
+using MongoDB.Driver;
+using Educast.Models;
+using MongoDB.Bson;
 using System.Xml;
-using System.Xml.Linq;
+using Newtonsoft.Json;
+using MongoDB.Bson.Serialization;
+using System.Web.Http;
+using System.Net.Http;
+using System.Web;
+using System.Net;
 
 namespace Educast.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class XMLController: ControllerBase
+    [Route("api/XMLController")]
+    public class XMLController: ApiController
     {
         private readonly IMongoCollection<XMLDoc> _xml;
 
@@ -30,16 +28,16 @@ namespace Educast.Controllers
             _xml = database.GetCollection<XMLDoc>("xmlFiles");
         }
 
-
         [HttpPost]
-        public async Task<ActionResult> Create()
+        public async Task<XMLDoc> Create()
         {
             try
             {
-                using (var reader = new StreamReader(HttpContext.Request.Body))
+                XMLDoc xml = new XMLDoc();
+                using (var reader = new StreamReader(HttpContext.Current.Request.Body))
                 {
                     var body = reader.ReadToEnd(); // read input string
-                    XMLDoc xml = new XMLDoc();
+                    
                     XmlDocument doc = new XmlDocument();
                     doc.LoadXml(body); // String to XML Document
 
@@ -48,17 +46,16 @@ namespace Educast.Controllers
                     xml.XML = bsdocument;
                     await _xml.InsertOneAsync(xml); //Insert into mongoDB
                 }
-                return Ok();
+                return xml;
             }
             catch (Exception e)
             {
-                return BadRequest(e.Message);
+                return null;
             }
             
         }
-
-        [HttpPut("{id}")]
-        public async Task<ActionResult> Update(ObjectId id)
+        [HttpPut]
+        public async Task<HttpResponseMessage> Update(ObjectId id)
         {
             try
             {
@@ -74,11 +71,11 @@ namespace Educast.Controllers
                     xmlIn.XML = bsdocument;
                     await _xml.ReplaceOneAsync(xml => xml.Id == id, xmlIn); 
                 }
-                return Ok();
+                return Request.CreateResponse(HttpStatusCode.Created);
             }
             catch (Exception e)
             {
-                return BadRequest(e.Message);
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
         }
 

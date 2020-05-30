@@ -1,91 +1,92 @@
-﻿using Educast.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
-using MongoDB.Driver;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Threading.Tasks;
 using System.Web.Http;
-using System.Xml;
-using System.Xml.Linq;
+using System.Web;
+using System.IO;
+using System.Threading.Tasks;
+using MongoDB.Driver;
+using Educast.Models;
+using MongoDB.Bson;
 
 namespace Educast.Controllers
 {
-    [Microsoft.AspNetCore.Mvc.Route("api/[controller]")]
-    [ApiController]
+    [Route("api/FileController")]
     public class FileController : ApiController
     {
-        private readonly IMongoCollection<Files> _files;
-
-        public FileController()
+        [HttpPost]
+        [AllowAnonymous]
+        public HttpResponseMessage Upload()
         {
-            var client = new MongoClient();
-            var database = client.GetDatabase("Educast");
-
-            _files = database.GetCollection<Files>("files");
+            HttpResponseMessage result;
+            var httpRequest = HttpContext.Current.Request;
+            if (httpRequest.Files.Count > 0)
+            {
+                var docfiles = new List<string>();
+                foreach (string file in httpRequest.Files)
+                {
+                    var postedFile = httpRequest.Files[file];
+                    var filePath = HttpContext.Current.Server.MapPath("~/FilesStore/" + postedFile.FileName);
+                    if (File.Exists(filePath))
+                    {
+                        bool validor = true;
+                        int cont = 1;
+                        while (validor)
+                        {
+                            filePath = HttpContext.Current.Server.MapPath("~/FilesStore/" + cont + postedFile.FileName);
+                            if (!File.Exists(filePath))
+                            {
+                                postedFile.SaveAs(filePath);
+                                docfiles.Add(filePath);
+                                validor = false;
+                            }
+                            else
+                            {
+                                validor = true;
+                                cont++;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        postedFile.SaveAs(filePath);
+                        docfiles.Add(filePath);
+                    }
+                }
+                result = Request.CreateResponse(HttpStatusCode.Created, docfiles);
+            }
+            else
+            {
+                result = Request.CreateResponse(HttpStatusCode.BadRequest);
+            }
+            return result;
         }
 
-        [Microsoft.AspNetCore.Mvc.HttpPost]
-        public async Task<IHttpActionResult> Upload(Files fileIn)
+        [HttpPut]
+        [AllowAnonymous]
+        public HttpResponseMessage Update()
         {
-            try
+            HttpResponseMessage result;
+            var httpRequest = HttpContext.Current.Request;
+            if (httpRequest.Files.Count > 0)
             {
-                if (!Request.Content.IsMimeMultipartContent())
-                    throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
-
-                var provider = new MultipartMemoryStreamProvider();
-                await Request.Content.ReadAsMultipartAsync(provider);
-                foreach (var file in provider.Contents)
+                var docfiles = new List<string>();
+                foreach (string file in httpRequest.Files)
                 {
-                    var filename = file.Headers.ContentDisposition.FileName.Trim('\"');
-                    var buffer = await file.ReadAsByteArrayAsync();
-                    fileIn.fileName = filename;
-                    fileIn.Bytes = buffer;
-                    await _files.InsertOneAsync(fileIn);
+                    var postedFile = httpRequest.Files[file];
+                    var filePath = HttpContext.Current.Server.MapPath("~/FilesStore/" + postedFile.FileName);
+                    postedFile.SaveAs(filePath);
+                    docfiles.Add(filePath);
                 }
-
-                return Ok();
+                result = Request.CreateResponse(HttpStatusCode.Created, docfiles);
             }
-            catch (Exception e)
+            else
             {
-                return BadRequest(e.Message);
+                result = Request.CreateResponse(HttpStatusCode.BadRequest);
             }
-            
-        }
-
-        [Microsoft.AspNetCore.Mvc.HttpPut("{id}")]
-        public async Task<IHttpActionResult> Update([FromRouteAttribute]ObjectId id, Files fileIn)
-        {
-            try
-            {
-                if (!Request.Content.IsMimeMultipartContent())
-                    throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
-
-                var provider = new MultipartMemoryStreamProvider();
-                await Request.Content.ReadAsMultipartAsync(provider);
-                foreach (var file in provider.Contents)
-                {
-                    var filename = file.Headers.ContentDisposition.FileName.Trim('\"');
-                    var buffer = await file.ReadAsByteArrayAsync();
-                    fileIn.fileName = filename;
-                    fileIn.Bytes = buffer;
-                    await _files.ReplaceOneAsync(fil => fil.Id == id, fileIn);
-                }
-
-                return Ok();
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
+            return result;
         }
     }
 }
