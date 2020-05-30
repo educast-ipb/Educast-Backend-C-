@@ -8,15 +8,14 @@ using MongoDB.Bson;
 using System.Xml;
 using Newtonsoft.Json;
 using MongoDB.Bson.Serialization;
-using System.Web.Http;
-using System.Net.Http;
-using System.Web;
 using System.Net;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Educast.Controllers
 {
     [Route("api/XMLController")]
-    public class XMLController: ApiController
+    [ApiController]
+    public class XMLController: ControllerBase
     {
         private readonly IMongoCollection<XMLDoc> _xml;
 
@@ -34,7 +33,7 @@ namespace Educast.Controllers
             try
             {
                 XMLDoc xml = new XMLDoc();
-                using (var reader = new StreamReader(HttpContext.Current.Request.Body))
+                using (var reader = new StreamReader(HttpContext.Request.Body))
                 {
                     var body = reader.ReadToEnd(); // read input string
                     
@@ -55,14 +54,14 @@ namespace Educast.Controllers
             
         }
         [HttpPut]
-        public async Task<HttpResponseMessage> Update(ObjectId id)
+        public async Task<XMLDoc> Update(ObjectId id)
         {
             try
             {
+                XMLDoc xmlIn = _xml.Find(xml => xml.Id == id).First();
                 using (var reader = new StreamReader(HttpContext.Request.Body))
                 {
                     var body = reader.ReadToEnd(); // read input string
-                    XMLDoc xmlIn = _xml.Find(xml => xml.Id == id).First();
                     XmlDocument doc = new XmlDocument();
                     doc.LoadXml(body); // String to XML Document
 
@@ -71,11 +70,11 @@ namespace Educast.Controllers
                     xmlIn.XML = bsdocument;
                     await _xml.ReplaceOneAsync(xml => xml.Id == id, xmlIn); 
                 }
-                return Request.CreateResponse(HttpStatusCode.Created);
+                return xmlIn;
             }
             catch (Exception e)
             {
-                return Request.CreateResponse(HttpStatusCode.BadRequest);
+                return null;
             }
         }
 
